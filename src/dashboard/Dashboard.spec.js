@@ -24,7 +24,32 @@ test('Dashboard renders and matches snapshot', () => {
     expect(wrapper.asFragment()).toMatchSnapshot();
 })
   
-// test("<Dashboard /> snapshot", async () => {
-//     const wrapper = rtl.render(<Dashboard />)
-//     expect(wrapper.asFragment()).toMatchSnapshot()
-//   })
+//closing the door test
+
+test('Door Closes', async() => {
+    const wrapper = rtl.render(<Dashboard/>)
+    await wrapper.findByText(/open/i)
+    
+    const close = wrapper.getByText(/close/i)
+    
+    rtl.act(() => {
+        rtl.fireEvent.click(close)
+    })
+    expect(wrapper.getByText(/close/i)).not.toBe(/open/i)
+})
+
+//locking the door test
+test('should lock the door', async () => {
+    const wrapper = rtl.render(<Dashboard />)
+    await wrapper.findByText(/unlocked/i)
+
+    const lock = wrapper.queryByText(/lock gate/i)
+
+    rtl.act(() => {
+        rtl.fireEvent.click(lock)
+    })
+
+    expect(wrapper.queryByText(/unlock/i)).not.toBe(/locked/i)
+
+})
+
